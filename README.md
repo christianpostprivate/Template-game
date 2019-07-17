@@ -17,6 +17,6 @@ This is just an outline that I'll use for bigger projects. I try to continously 
      - **sprites**:  all sprite images and image strips
      - **tilesets**: all image files used by Tiled
   - **sounds**: all mp3 files
-- **data**: all text data (.txt, .json, .xml, .dat ect.)
+- **data**: all text data (.txt, .json, .xml, .dat, etc.)
   - **saves**: ingame save files
   - **tilemaps**: .tsx and .tmx files
