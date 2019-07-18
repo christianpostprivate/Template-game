@@ -59,7 +59,7 @@ class Game():
             self.running = False
         elif self.state.done:
             self.flip_state()
-        self.state.update(self.screen, dt)
+        self.state.update(dt)
 
 
     def draw(self):
