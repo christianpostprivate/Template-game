@@ -13,4 +13,8 @@ SCREEN_H = 300
 # Frames per second
 FPS = 30
 
+# default Tilesize
+TILE_W = 16
+TILE_H = 16
+
 DEFAULT_FONT = 'Arial'
