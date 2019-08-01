@@ -5,8 +5,8 @@ This is just an outline that I'll use for bigger projects. I try to continously 
 
 # Structure
 
-- **run.py**: run this file to play
-- **modules**: custom python modules
+- **src**: custom python modules
+  - **run.py**: run this file to play
   - **game.py**: contains the game controller object that initializes pygame and manages the game states
   - **settings.py**: global game settings that apply to the start of the game
   - **sprites.py**: contains all children of pygame.sprite.Sprite used in the game
