@@ -140,11 +140,16 @@ class Test_sprite(Animated_sprite):
             
         
         def update(self, dt):
-            keys = pg.key.get_pressed()
+            #keys = pg.key.get_pressed()
+            keys = self.game.keys_pressed
 
             self.sprite.acc *= 0
-            self.sprite.acc.x = keys[pg.K_d] - keys[pg.K_a]
-            self.sprite.acc.y = keys[pg.K_s] - keys[pg.K_w]
+# =============================================================================
+#             self.sprite.acc.x = keys[pg.K_d] - keys[pg.K_a]
+#             self.sprite.acc.y = keys[pg.K_s] - keys[pg.K_w]
+# =============================================================================
+            self.sprite.acc.x = keys['RIGHT'] - keys['LEFT']
+            self.sprite.acc.y = keys['DOWN'] - keys['UP']
             if self.sprite.acc.length() > 1:
                 self.sprite.acc.scale_to_length(1)
             self.sprite.vel += self.sprite.acc * self.sprite.speed * dt

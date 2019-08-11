@@ -1,4 +1,5 @@
 import pygame as pg
+import json
 
 import settings as st
 
@@ -7,13 +8,24 @@ import settings as st
 vec = pg.math.Vector2
 
 
+def difference(list1, list2):
+    return [1 if elem and not list1[i] else 0 for i, elem in enumerate(list2)]
+
+
+def is_jsonable(x):
+    try:
+        json.dumps(x)
+        return True
+    except:
+        return False
+
 
 class Camera():
     '''
     modified from http://kidscancode.org/lessons/
     modes are
         FOLLOW: player is always in the middle of the screen
-        PAN: camera pans as soon as the player leaves the screen
+        CUT: camera pans as soon as the player leaves the screen
         SLIDE: like pan, but with a sliding animation
     '''
     def __init__(self, game, map_width, map_height, mode='FOLLOW'):
@@ -30,7 +42,8 @@ class Camera():
         self.prev_qw = 0
         self.prev_qh = 0
         
-        self.slide_speed = 1 # pixel per frame, change this to dt
+        self.slide_speed = 0.05 # percent, change this to dt
+        self.slide_amount = 0
 
 
     def apply(self, entity):
@@ -49,55 +62,62 @@ class Camera():
         if self.mode == 'FOLLOW':
             x = -target.rect.x + self.game.screen_rect.w // 2
             y = -target.rect.y + self.game.screen_rect.h // 2
-        elif self.mode == 'PAN':
+        elif self.mode == 'CUT':
             # divide into quadrants
             quads_w = self.rect.w // self.game.screen_rect.w
             quads_h = self.rect.h // self.game.screen_rect.h
-            # which quadrant the target is in 
-            # TODO: remove unnecessary calculations...
+            # which quadrant the target is in.
             qw = target.rect.x // (self.rect.w // quads_w)
             qh = target.rect.y // (self.rect.h // quads_h)
             
-            x = (self.game.screen_rect.w) * -qw
-            y = (self.game.screen_rect.h) * -qh 
-
+            x = (self.game.screen_rect.w) * qw * -1
+            y = (self.game.screen_rect.h) * qh * -1
             
-            pg.display.set_caption(f'({x}/{y})')
         elif self.mode == 'SLIDE':
             # divide into quadrants
             quads_w = self.rect.w // self.game.screen_rect.w
             quads_h = self.rect.h // self.game.screen_rect.h
             # which quadrant the target is in 
-            # TODO: remove unnecessary calculations...
             qw = target.rect.x // (self.rect.w // quads_w)
             qh = target.rect.y // (self.rect.h // quads_h)
             
-            self.target_pos.x = (self.game.screen_rect.w) * -qw
-            self.target_pos.y = (self.game.screen_rect.h) * -qh
+            # limit the quadrants to the map
+            #qw = qw % quads_w # not a good idea when player.pos isn't wrapping
+            qw = min(max(qw, 0), quads_w - 1)
+            qh = min(max(qh, 0), quads_h - 1)
             
-            #print(qw, self.prev_qw)
+            
+            self.target_pos.x = (self.game.screen_rect.w) * qw * -1
+            self.target_pos.y = (self.game.screen_rect.h) * qh * -1
+
             if qw != self.prev_qw or qh != self.prev_qh:
-                #self.is_sliding = True
+                self.is_sliding = True
                 
-                # calculate the sliding direction
-                dirx = qw - self.prev_qw
-                diry = qh - self.prev_qh
+                self.slide_amount += self.slide_speed
+                self.slide_amount = min(self.slide_amount, 1)
+                between = self.prev_pos.lerp(self.target_pos, self.slide_amount)
                 
-                x = self.prev_pos.x - self.target_pos.x
-                y = self.prev_pos.y - self.target_pos.y
+                x = int(between.x)
+                y = int(between.y)
                 
-                pg.display.set_caption(f'({self.prev_pos.x}/{self.target_pos.x})')
+                if self.target_pos.x == x and self.target_pos.y == y:
+                    self.prev_qw = qw
+                    self.prev_qh = qh
+                    self.slide_amount = 0
+                
             else:
-    
+                self.is_sliding = False
+                
                 x = self.target_pos.x
                 y = self.target_pos.y
                 
                 self.prev_pos.x = self.target_pos.x
                 self.prev_pos.y = self.target_pos.y
 
-            self.prev_qw = qw
-            self.prev_qh = qh
-            
+                self.prev_qw = qw
+                self.prev_qh = qh
+
+            #pg.display.set_caption(f'({qw}/{qh})')
 
         # limit scrolling to map size
         x = min(0, x) # left
