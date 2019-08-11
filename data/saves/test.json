@@ -1,0 +1,1 @@
+{"all_sprites": {"properties": {}, "id": 9, "name": "Test_sprite", "type": null, "x": 112.0, "y": 64.0, "width": 16.0, "height": 16.0, "rotation": 0, "gid": 0, "visible": 1, "template": null, "size": [16.0, 16.0], "speed": 1000, "friction": 0.7, "state_name": "Default_state", "anim_timer": 0.066, "anim_delay": 0.2, "anim_frame": 0}}

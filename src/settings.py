@@ -20,3 +20,10 @@ TILE_W = 16
 TILE_H = 16
 
 DEFAULT_FONT = 'Arial'
+
+
+
+# MUSIC
+# global volumes
+MUSIC_VOLUME = 0.5
+SFX_VOLUME = 0.6

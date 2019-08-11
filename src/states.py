@@ -16,7 +16,6 @@ class State(object):
         self.game = game
         self.next = None # what comes after if this is done
         self.done = False # if true, the next state gets executed
-        self.quit = False # if true, the game application is terminated
         self.previous = None # the state that was executed before
     
     def startup(self):
@@ -46,17 +45,27 @@ class In_game(State):
         
         self.player = self.game.all_sprites.sprites()[0]
         
+        # start playing backround music for this state
+        self.game.asset_loader.play_music('overworld')
+    
+    
+    def cleanup(self):
+        self.game.save('test.json')
+        
                
     def get_event(self, event):
         if event.type == pg.KEYDOWN:
             if event.key == pg.K_ESCAPE:
-                self.quit = True
+                self.done = True
                        
     
     def update(self, dt):
         if not self.camera.is_sliding:
             self.game.all_sprites.update(dt)
         self.camera.update(self.player)
+        
+        if self.game.keydown['A']:
+            self.game.asset_loader.play_sound('test_sound')
               
         
     def draw(self, screen):
@@ -81,7 +90,7 @@ class Title_screen(State):
         
     def get_event(self, event):
         # press any key to continue
-        if event.type == pg.KEYDOWN:
+        if event.type == pg.KEYDOWN or self.game.gamepad_controller.any_key():
             self.done = True
                        
     
