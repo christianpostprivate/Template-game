@@ -44,9 +44,6 @@ class In_game(State):
                                    'SLIDE')
         
         self.player = self.game.all_sprites.sprites()[0]
-        
-        # start playing backround music for this state
-        self.game.asset_loader.play_music('overworld')
     
     
     def cleanup(self):
@@ -65,7 +62,7 @@ class In_game(State):
         self.camera.update(self.player)
         
         if self.game.keydown['A']:
-            self.game.asset_loader.play_sound('test_sound')
+            self.game.asset_loader.play_sound('Pickup_Coin35')
               
         
     def draw(self, screen):
@@ -74,12 +71,6 @@ class In_game(State):
         
         for sprite in self.game.all_sprites:
             self.game.screen.blit(sprite.image, self.camera.apply(sprite))
-        
-# =============================================================================
-#         for s in self.game.all_sprites:
-#             pg.draw.rect(screen, pg.Color('white'), self.camera.apply_rect(s.rect), 1)
-# =============================================================================
-        
 
 
 class Title_screen(State):

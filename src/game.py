@@ -102,9 +102,6 @@ class Game():
         # get input before state updates
         self.gamepad_controller.update()
         self.key_getter.get_input(self.gamepad_controller, self.events_list)
-        
-        #self.key_getter.test_inputs(self.keydown)
-        #self.gamepad_controller.test_inputs('inputs_down')
 
         if self.state.done:
             self.flip_state()

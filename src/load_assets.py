@@ -22,14 +22,14 @@ class Loader():
         '''
         load sprite image strips here
         '''
-        sprite_files = ['knight_strip.png']
-        
+        sprite_files = list(filter(lambda x: x[-3:]=='png', os.listdir(self.sprite_folder)))
         sprite_images = [pg.image.load(os.path.join(self.sprite_folder, f)).convert_alpha() 
                          for f in sprite_files]
-                
+        
+        # create a dictionary with name: list of images
         sprite_lib = {
-                'knight_images': self.images_from_strip(sprite_images[0], 10)
-                }
+            'example': self.images_from_strip(sprite_images['example'], 16)
+            }
         
         return sprite_lib
     
@@ -37,25 +37,25 @@ class Loader():
     def load_sounds(self):
         pg.mixer.init()
         
-        music_files = [
-                'A_Journey_Awaits.mp3'
-                ]
-        sfx_files = [
-                'Pickup_Coin35.wav'
-                ]
-
-        music_objects = [os.path.join(self.sounds_folder, 'bgm', f)
-                         for f in music_files]     
-        sfx_objects = [pg.mixer.Sound(os.path.join(self.sounds_folder, 'sfx', f))
-                        for f in sfx_files]
+        bgm_folder = os.path.join(self.sounds_folder, 'bgm')
+        sfx_folder = os.path.join(self.sounds_folder, 'sfx')
+        
+        music_files = list(filter(lambda x: x[-3:]=='mp3' or x[-3:]=='ogg', 
+                                  os.listdir(bgm_folder)))
+        music_objects = {f[:-4]: os.path.join(bgm_folder, f)
+                         for f in music_files}
+        
+        sfx_files = list(filter(lambda x: x[-3:]=='mp3' or x[-3:]=='wav', 
+                                  os.listdir(sfx_folder)))
+        sfx_objects = {f[:-4]: pg.mixer.Sound(os.path.join(sfx_folder, f))
+                        for f in sfx_files}
         
         # sound libs stored as (filename, relative volume)
         self.music_lib = {
-                'overworld': (music_objects[0], 0.9)
                 }
         
         self.sfx_lib = {
-                'test_sound': (sfx_objects[0], 1)
+            'Pickup_Coin35': (sfx_objects['Pickup_Coin35.wav'], 1),
                 }
         
         
